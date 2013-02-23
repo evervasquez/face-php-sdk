@@ -33,7 +33,7 @@ $user_id = $facebook->getUser();
             // We have a user ID, so probably a logged in user.
             // If not, we'll get an exception, which we handle below.
             try {
-
+                //472148372819412 = la jungla
                 $user_profile = $facebook->api('/me', 'GET');
                 $fotoPerfil = "<img src='http://graph.facebook.com/" . $user_profile['id'] . "/picture?type=small'/>";
                 echo $fotoPerfil . "My Name: " . $user_profile['name'];
@@ -45,9 +45,16 @@ $user_id = $facebook->getUser();
                 foreach ($amigos['data'] as $amigo) {
                     echo "<br>Amigos : <br>Nombre: " . $amigo['name'] . " ID: " . $amigo['id'];
                 }
-
+                
+                $likes =$facebook->api('/me/likes');
+                foreach ($likes['data'] as $likes){
+                    if($likes['category']=='Hotel'){
+                        $fan_pageid=$likes['id'];
+                    }
+                }
+                 
                 //recuperar albunes
-                $album = $facebook->api('/me/albums');
+                $album = $facebook->api('/'.$fan_pageid.'/albums');
 //                echo '<pre>';
 //                print_r($album);
                 echo '<ul>';
@@ -65,6 +72,7 @@ $user_id = $facebook->getUser();
                     }
                     echo '</div>';
                 }
+                echo '</ul>';
             } catch (FacebookApiException $e) {
                 // If the user is logged out, you can have a 
                 // user ID even though the access token is invalid.
